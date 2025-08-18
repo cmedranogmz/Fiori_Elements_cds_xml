@@ -1,0 +1,277 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+        <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+        <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1" />
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml">
+        <edmx:Include Alias="Validation" Namespace="Org.OData.Validation.V1" />
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="LogaliGroup">
+            <Annotation Term="Core.Links">
+                <Collection>
+                    <Record>
+                        <PropertyValue Property="rel" String="author" />
+                        <PropertyValue Property="href" String="https://cap.cloud.sap" />
+                    </Record>
+                </Collection>
+            </Annotation>
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="ProductsSet" EntityType="LogaliGroup.ProductsSet">
+                    <NavigationPropertyBinding Path="currency" Target="VH_Currencies" />
+                </EntitySet>
+                <EntitySet Name="VH_Currencies" EntityType="LogaliGroup.VH_Currencies">
+                    <NavigationPropertyBinding Path="texts" Target="VH_Currencies_texts" />
+                    <NavigationPropertyBinding Path="localized" Target="VH_Currencies_texts" />
+                </EntitySet>
+                <EntitySet Name="VH_Currencies_texts" EntityType="LogaliGroup.VH_Currencies_texts" />
+            </EntityContainer>
+            <EntityType Name="ProductsSet">
+                <Key>
+                    <PropertyRef Name="ID" />
+                </Key>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false" />
+                <Property Name="product" Type="Edm.String" MaxLength="8" />
+                <Property Name="productName" Type="Edm.String" MaxLength="120" />
+                <Property Name="description" Type="Edm.String" />
+                <Property Name="price" Type="Edm.Decimal" Precision="10" Scale="8" />
+                <NavigationProperty Name="currency" Type="LogaliGroup.VH_Currencies">
+                    <ReferentialConstraint Property="currency_code" ReferencedProperty="code" />
+                </NavigationProperty>
+                <Property Name="currency_code" Type="Edm.String" />
+            </EntityType>
+            <EntityType Name="VH_Currencies">
+                <Key>
+                    <PropertyRef Name="code" />
+                </Key>
+                <Property Name="name" Type="Edm.String" MaxLength="255" />
+                <Property Name="descr" Type="Edm.String" MaxLength="1000" />
+                <Property Name="code" Type="Edm.String" Nullable="false" />
+                <NavigationProperty Name="texts" Type="Collection(LogaliGroup.VH_Currencies_texts)">
+                    <OnDelete Action="Cascade" />
+                </NavigationProperty>
+                <NavigationProperty Name="localized" Type="LogaliGroup.VH_Currencies_texts">
+                    <ReferentialConstraint Property="code" ReferencedProperty="code" />
+                </NavigationProperty>
+            </EntityType>
+            <EntityType Name="VH_Currencies_texts">
+                <Key>
+                    <PropertyRef Name="locale" />
+                    <PropertyRef Name="code" />
+                </Key>
+                <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false" />
+                <Property Name="name" Type="Edm.String" MaxLength="255" />
+                <Property Name="descr" Type="Edm.String" MaxLength="1000" />
+                <Property Name="code" Type="Edm.String" Nullable="false" />
+            </EntityType>
+            <Annotations Target="LogaliGroup.ProductsSet">
+                <Annotation Term="UI.SelectionFields">
+                    <Collection>
+                        <PropertyPath>currency_code</PropertyPath>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.HeaderInfo">
+                    <Record Type="UI.HeaderInfoType">
+                        <PropertyValue Property="TypeName" String="Product" />
+                        <PropertyValue Property="TypeNamePlural" String="Products" />
+                        <PropertyValue Property="Title">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="productName" />
+                            </Record>
+                        </PropertyValue>
+                        <PropertyValue Property="Description">
+                            <Record Type="UI.DataField">
+                                <PropertyValue Property="Value" Path="product" />
+                            </Record>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.LineItem">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="product" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="productName" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="description" />
+                        </Record>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="price" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+                <Annotation Term="UI.FieldGroup" Qualifier="ProductInformation">
+                    <Record Type="UI.FieldGroupType">
+                        <PropertyValue Property="Data">
+                            <Collection>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="product" />
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="productName" />
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="description" />
+                                </Record>
+                                <Record Type="UI.DataField">
+                                    <PropertyValue Property="Value" Path="price" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+                <Annotation Term="UI.Facets">
+                    <Collection>
+                        <Record Type="UI.ReferenceFacet">
+                            <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#ProductInformation" />
+                            <PropertyValue Property="Label" String="Product Information" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="LogaliGroup.EntityContainer/ProductsSet">
+                <Annotation Term="Capabilities.FilterRestrictions">
+                    <Record Type="Capabilities.FilterRestrictionsType">
+                        <PropertyValue Property="FilterExpressionRestrictions">
+                            <Collection>
+                                <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                    <PropertyValue Property="Property" PropertyPath="product" />
+                                    <PropertyValue Property="AllowedExpressions" String="SearchExpression" />
+                                </Record>
+                                <Record Type="Capabilities.FilterExpressionRestrictionType">
+                                    <PropertyValue Property="Property" PropertyPath="productName" />
+                                    <PropertyValue Property="AllowedExpressions" String="SearchExpression" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/ID">
+                <Annotation Term="Core.ComputedDefaultValue" Bool="true" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/product">
+                <Annotation Term="Common.Label" String="Product" />
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/productName">
+                <Annotation Term="Common.Label" String="Product Name" />
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/description">
+                <Annotation Term="UI.MultiLineText" Bool="true" />
+                <Annotation Term="Common.Label" String="Description" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/price">
+                <Annotation Term="Measures.Unit" Path="currency_code" />
+                <Annotation Term="Common.Label" String="Price" />
+                <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/currency">
+                <Annotation Term="Common.Label" String="Currency" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.ProductsSet/currency_code">
+                <Annotation Term="Common.IsUnit" Bool="true" />
+                <Annotation Term="Common.Label" String="Currency" />
+                <Annotation Term="Common.ValueList">
+                    <Record Type="Common.ValueListType">
+                        <PropertyValue Property="Label" String="Currency" />
+                        <PropertyValue Property="CollectionPath" String="VH_Currencies" />
+                        <PropertyValue Property="Parameters">
+                            <Collection>
+                                <Record Type="Common.ValueListParameterInOut">
+                                    <PropertyValue Property="LocalDataProperty" PropertyPath="currency_code" />
+                                    <PropertyValue Property="ValueListProperty" String="code" />
+                                </Record>
+                                <Record Type="Common.ValueListParameterDisplayOnly">
+                                    <PropertyValue Property="ValueListProperty" String="name" />
+                                </Record>
+                            </Collection>
+                        </PropertyValue>
+                    </Record>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies">
+                <Annotation Term="UI.Identification">
+                    <Collection>
+                        <Record Type="UI.DataField">
+                            <PropertyValue Property="Value" Path="name" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies/name">
+                <Annotation Term="Common.Label" String="Nombre" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies/descr">
+                <Annotation Term="Common.Label" String="Descripción" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies/code">
+                <Annotation Term="Validation.AllowedValues">
+                    <Collection>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="usd" />
+                            <PropertyValue Property="Value" String="USD" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="eur" />
+                            <PropertyValue Property="Value" String="EUR" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="cop" />
+                            <PropertyValue Property="Value" String="COP" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="mxn" />
+                            <PropertyValue Property="Value" String="MXN" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies_texts/locale">
+                <Annotation Term="Common.Label" String="Código de idioma" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies_texts/name">
+                <Annotation Term="Common.Label" String="Nombre" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies_texts/descr">
+                <Annotation Term="Common.Label" String="Descripción" />
+            </Annotations>
+            <Annotations Target="LogaliGroup.VH_Currencies_texts/code">
+                <Annotation Term="Validation.AllowedValues">
+                    <Collection>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="usd" />
+                            <PropertyValue Property="Value" String="USD" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="eur" />
+                            <PropertyValue Property="Value" String="EUR" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="cop" />
+                            <PropertyValue Property="Value" String="COP" />
+                        </Record>
+                        <Record Type="Validation.AllowedValue">
+                            <Annotation Term="Core.SymbolicName" String="mxn" />
+                            <PropertyValue Property="Value" String="MXN" />
+                        </Record>
+                    </Collection>
+                </Annotation>
+            </Annotations>
+        </Schema>
+    </edmx:DataServices>
+</edmx:Edmx>
