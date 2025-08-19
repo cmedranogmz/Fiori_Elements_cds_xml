@@ -1,0 +1,1 @@
+using LogaliGroup as service from '../../srv/service';

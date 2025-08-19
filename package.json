@@ -32,7 +32,8 @@
     "generate-entry-point": "dev-cap-tools gen-entrypoint",
     "cds-watch": "cds watch --open",
     "watch-products_cap_cds_annotations": "cds watch --open products_cap_cds_annotations/webapp/index.html?sap-ui-xx-viewCache=false",
-    "watch-products_xml_annotations": "cds watch --open products_xml_annotations/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-products_xml_annotations": "cds watch --open products_xml_annotations/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-products_fpm": "cds watch --open products_fpm/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "requires": {
@@ -62,6 +63,7 @@
   "lcap": true,
   "sapux": [
     "app/products_cap_cds_annotations",
-    "app/products_xml_annotations"
+    "app/products_xml_annotations",
+    "app/products_fpm"
   ]
 }
